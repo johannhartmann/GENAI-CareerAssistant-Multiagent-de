@@ -24,7 +24,7 @@ def linkedin_job_search(
     distance=None,
 ) -> dict:  # type: ignore
     """
-    Search LinkedIn for job postings based on specified criteria. Returns detailed job listings.
+    Suche auf LinkedIn nach Stellenangeboten basierend auf bestimmten Kriterien. Gibt detaillierte Stellenangebote zurück.
     """
     job_ids = get_job_ids(
         keywords=keywords,
@@ -42,14 +42,14 @@ def linkedin_job_search(
 
 def get_job_search_tool():
     """
-    Create a tool for the JobPipeline function.
-    Returns:
-    StructuredTool: A structured tool for the JobPipeline function.
+    Erstelle ein Tool für die JobPipeline-Funktion.
+    Rückgabe:
+    StructuredTool: Ein strukturiertes Tool für die JobPipeline-Funktion.
     """
     job_pipeline_tool = StructuredTool.from_function(
         func=linkedin_job_search,
         name="JobSearchTool",
-        description="Search LinkedIn for job postings based on specified criteria. Returns detailed job listings",
+        description="Suche auf LinkedIn nach Stellenangeboten basierend auf bestimmten Kriterien. Gibt detaillierte Stellenangebote zurück",
         args_schema=JobSearchInput,
     )
     return job_pipeline_tool
@@ -58,20 +58,23 @@ def get_job_search_tool():
 # Resume Extraction Tool
 class ResumeExtractorTool(BaseTool):
     """
-    Extract the content of a resume from a PDF file.
-    Returns:
-        dict: The extracted content of the resume.
+    Extrahiere den Inhalt eines Lebenslaufs aus einer PDF-Datei.
+    Rückgabe:
+        dict: Der extrahierte Inhalt des Lebenslaufs.
     """
+
     name: str = "ResumeExtractor"
-    description: str = "Extract the content of uploaded resume from a PDF file."
+    description: str = (
+        "Extrahiere den Inhalt des hochgeladenen Lebenslaufs aus einer PDF-Datei."
+    )
 
     def extract_resume(self) -> str:
         """
-        Extract resume content from a PDF file.
-        Extract and structure job-relevant information from an uploaded CV.
+        Extrahiere den Lebenslaufinhalt aus einer PDF-Datei.
+        Extrahiere und strukturiere jobrelevante Informationen aus einem hochgeladenen Lebenslauf.
 
-        Returns:
-        str: The content of the highlight skills, experience, and qualifications relevant to job applications, omitting personal information
+        Rückgabe:
+        str: Der Inhalt der hervorgehobenen Fähigkeiten, Erfahrungen und Qualifikationen, die für Bewerbungen relevant sind, unter Auslassung persönlicher Informationen
         """
         text = load_resume("temp/resume.pdf")
         return text
@@ -84,8 +87,8 @@ class ResumeExtractorTool(BaseTool):
 @tool
 def generate_letter_for_specific_job(resume_details: str, job_details: str) -> dict:
     """
-    Generate a tailored cover letter using the provided CV and job details. This function constructs the letter as plain text.
-    returns: A dictionary containing the job and resume details for generating the cover letter.
+    Generiere ein maßgeschneidertes Anschreiben unter Verwendung des bereitgestellten Lebenslaufs und der Stellendetails. Diese Funktion erstellt das Anschreiben als Klartext.
+    Rückgabe: Ein Wörterbuch mit den Stellen- und Lebenslaufdetails zur Generierung des Anschreibens.
     """
     return {"job_details": job_details, "resume_details": resume_details}
 
@@ -95,23 +98,23 @@ def save_cover_letter_for_specific_job(
     cover_letter_content: str, company_name: str
 ) -> str:
     """
-    Returns a download link for the generated cover letter.
-    Params:
-    cover_letter_content: The combine information of resume and job details to tailor the cover letter.
+    Gibt einen Download-Link für das generierte Anschreiben zurück.
+    Parameter:
+    cover_letter_content: Die kombinierten Informationen aus Lebenslauf und Stellendetails zur Anpassung des Anschreibens.
     """
     filename = f"temp/{company_name}_cover_letter.docx"
     file = write_cover_letter_to_doc(cover_letter_content, filename)
     abs_path = os.path.abspath(file)
-    return f"Here is the download link: {abs_path}"
+    return f"Hier ist der Download-Link: {abs_path}"
 
 
 # Web Search Tools
 @tool("google_search")
 def get_google_search_results(
-    query: str = Field(..., description="Search query for web")
+    query: str = Field(..., description="Suchanfrage für das Web")
 ) -> str:
     """
-    search the web for the given query and return the search results.
+    Durchsuche das Web nach der gegebenen Anfrage und gib die Suchergebnisse zurück.
     """
     response = SerperClient().search(query)
     items = response.get("items")
@@ -121,9 +124,9 @@ def get_google_search_results(
             string.append(
                 "\n".join(
                     [
-                        f"Title: {result['title']}",
+                        f"Titel: {result['title']}",
                         f"Link: {result['link']}",
-                        f"Snippet: {result['snippet']}",
+                        f"Ausschnitt: {result['snippet']}",
                         "---",
                     ]
                 )
@@ -136,12 +139,12 @@ def get_google_search_results(
 
 
 @tool("scrape_website")
-def scrape_website(url: str = Field(..., description="Url to be scraped")) -> str:
+def scrape_website(url: str = Field(..., description="Zu scrapende URL")) -> str:
     """
-    Scrape the content of a website and return the text.
+    Scrape den Inhalt einer Website und gib den Text zurück.
     """
     try:
         content = FireCrawlClient().scrape(url)
     except Exception as exc:
-        return f"Failed to scrape {url}"
+        return f"Scrapen von {url} fehlgeschlagen"
     return content

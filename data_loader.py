@@ -4,13 +4,13 @@ from langchain_community.document_loaders import PyMuPDFLoader
 
 def load_resume(file_path):
     """
-    Load the content of a CV file.
+    Lädt den Inhalt einer Lebenslauf-Datei.
 
-    Parameters:
-    file (str): The path to the CV file.
+    Parameter:
+    file (str): Der Pfad zur Lebenslauf-Datei.
 
-    Returns:
-    str: The content of the CV file.
+    Rückgabe:
+    str: Der Inhalt der Lebenslauf-Datei.
     """
     loader = PyMuPDFLoader(file_path)
     pages = loader.load()
@@ -22,20 +22,20 @@ def load_resume(file_path):
 
 def write_cover_letter_to_doc(text, filename="temp/cover_letter.docx"):
     """
-    Writes the given text as a cover letter to a Word document.
+    Schreibt den gegebenen Text als Anschreiben in ein Word-Dokument.
 
-    Parameters:
-    text (str): The text content of the cover letter.
-    filename (str): The filename and path where the document will be saved. Default is "temp/cover_letter.docx".
+    Parameter:
+    text (str): Der Textinhalt des Anschreibens.
+    filename (str): Der Dateiname und Pfad, unter dem das Dokument gespeichert wird. Standard ist "temp/cover_letter.docx".
 
-    Returns:
-    str: The filename and path of the saved document.
+    Rückgabe:
+    str: Der Dateiname und Pfad des gespeicherten Dokuments.
     """
     doc = Document()
     paragraphs = text.split("\n")
-    # Add each paragraph to the document
+    # Füge jeden Absatz zum Dokument hinzu
     for para in paragraphs:
         doc.add_paragraph(para)
-    # Save the document to the specified file
+    # Speichere das Dokument in der angegebenen Datei
     doc.save(filename)
     return filename

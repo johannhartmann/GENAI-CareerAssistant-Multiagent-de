@@ -9,28 +9,28 @@ from schemas import RouteSchema
 
 def get_supervisor_chain(llm: BaseChatModel):
     """
-    Returns a supervisor chain that manages a conversation between workers.
+    Gibt eine Supervisor-Kette zurück, die ein Gespräch zwischen Mitarbeitern verwaltet.
 
-    The supervisor chain is responsible for managing a conversation between a group
-    of workers. It prompts the supervisor to select the next worker to act, and
-    each worker performs a task and responds with their results and status. The
-    conversation continues until the supervisor decides to finish.
+    Die Supervisor-Kette ist verantwortlich für die Verwaltung eines Gesprächs zwischen einer Gruppe
+    von Mitarbeitern. Sie fordert den Supervisor auf, den nächsten handelnden Mitarbeiter auszuwählen, und
+    jeder Mitarbeiter führt eine Aufgabe aus und antwortet mit seinen Ergebnissen und seinem Status. Das
+    Gespräch wird fortgesetzt, bis der Supervisor beschließt, es zu beenden.
 
     Returns:
-        supervisor_chain: A chain of prompts and functions that handle the conversation
-                          between the supervisor and workers.
+        supervisor_chain: Eine Kette von Prompts und Funktionen, die das Gespräch
+                          zwischen dem Supervisor und den Mitarbeitern handhaben.
     """
 
     team_members = get_team_members_details()
 
-    # Generate the formatted string
+    # Generiere den formatierten String
     formatted_string = ""
     for i, member in enumerate(team_members):
         formatted_string += (
-            f"**{i+1} {member['name']}**\nRole: {member['description']}\n\n"
+            f"**{i+1} {member['name']}**\nRolle: {member['description']}\n\n"
         )
 
-    # Remove the trailing new line
+    # Entferne die abschließende neue Zeile
     formatted_members_string = formatted_string.strip()
     system_prompt = get_supervisor_prompt_template()
 
@@ -43,17 +43,17 @@ def get_supervisor_chain(llm: BaseChatModel):
                 "system",
                 """
                 
-                Few steps to follow:
-                - Don't overcomplicate the conversation.
-                - If the user asked something to search on web then get the information and show it.
-                - If the user asked to analyze resume then just analyze it, don't be oversmart and do something else.
-                - Don't call chatbot agent if user is not asking from the above conversation.
+                Einige zu befolgende Schritte:
+                - Verkomplizieren Sie das Gespräch nicht unnötig.
+                - Wenn der Benutzer darum bittet, etwas im Web zu suchen, holen Sie die Informationen und zeigen Sie sie an.
+                - Wenn der Benutzer darum bittet, den Lebenslauf zu analysieren, analysieren Sie ihn einfach, seien Sie nicht übermäßig schlau und tun Sie nichts anderes.
+                - Rufen Sie den Chatbot-Agenten nicht auf, wenn der Benutzer nicht aus dem obigen Gespräch fragt.
                 
-                Penalty point will be given if you are not following the above steps.
-                Given the conversation above, who should act next?
-                "Or should we FINISH? Select one of: {options}.
-                 Do only what is asked, and do not deviate from the instructions. Don't hallucinate or 
-                 make up information.""",
+                Strafpunkte werden vergeben, wenn Sie die obigen Schritte nicht befolgen.
+                Wer sollte angesichts des obigen Gesprächs als Nächstes handeln?
+                "Oder sollten wir BEENDEN? Wählen Sie eines aus: {options}.
+                 Tun Sie nur das, worum gebeten wurde, und weichen Sie nicht von den Anweisungen ab. Halluzinieren Sie nicht oder 
+                 erfinden Sie keine Informationen.""",
             ),
         ]
     ).partial(options=str(options), members=formatted_members_string)
@@ -65,7 +65,7 @@ def get_supervisor_chain(llm: BaseChatModel):
 
 def get_finish_chain(llm: BaseChatModel):
     """
-    If the supervisor decides to finish the conversation, this chain is executed.
+    Wenn der Supervisor beschließt, das Gespräch zu beenden, wird diese Kette ausgeführt.
     """
     system_prompt = get_finish_step_prompt()
     prompt = ChatPromptTemplate.from_messages(

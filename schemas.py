@@ -13,17 +13,17 @@ class RouteSchema(BaseModel):
         "Finish",
     ] = Field(
         ...,
-        title="Next",
-        description="Select the next role",
+        title="Nächster",
+        description="Wählen Sie die nächste Rolle aus",
     )
 
 
 class JobSearchInput(BaseModel):
     keywords: str = Field(
-        description="Keywords describing the job role. (if the user is looking for a role in particular company then pass company with keywords)"
+        description="Schlüsselwörter, die die Jobrolle beschreiben. (Wenn der Benutzer nach einer Rolle in einem bestimmten Unternehmen sucht, geben Sie das Unternehmen mit den Schlüsselwörtern an)"
     )
     location_name: Optional[str] = Field(
-        description='Name of the location to search within. Example: "Kyiv City, Ukraine".'
+        description='Name des Ortes, in dem gesucht werden soll. Beispiel: "Kiew Stadt, Ukraine".'
     )
     employment_type: Optional[
         List[
@@ -37,12 +37,12 @@ class JobSearchInput(BaseModel):
                 "other",
             ]
         ]
-    ] = Field(description="Specific type(s) of job to search for.")
+    ] = Field(description="Spezifische Art(en) von Jobs, nach denen gesucht werden soll.")
     limit: Optional[int] = Field(
-        default=5, description="Maximum number of jobs to retrieve."
+        default=5, description="Maximale Anzahl der abzurufenden Jobs."
     )
     job_type: Optional[List[Literal["onsite", "remote", "hybrid"]]] = Field(
-        description="Filter for remote jobs, onsite or hybrid"
+        description="Filter für Remote-Jobs, Vor-Ort-Jobs oder Hybrid-Jobs"
     )
     experience: Optional[
         List[
@@ -56,13 +56,13 @@ class JobSearchInput(BaseModel):
             ]
         ]
     ] = Field(
-        description='Filter by experience levels. Options are "internship", "entry level", "associate", "mid-senior level", "director", "executive". pass the exact arguments'
+        description='Filter nach Erfahrungsstufen. Optionen sind "Praktikum", "Einstiegsniveau", "Associate", "mittleres bis gehobenes Niveau", "Direktor", "Führungskraft". Geben Sie die genauen Argumente an'
     )
     listed_at: Optional[Union[int, str]] = Field(
         default=86400,
-        description="Maximum number of seconds passed since job posting. 86400 will filter job postings posted in the last 24 hours.",
+        description="Maximale Anzahl von Sekunden seit der Jobveröffentlichung. 86400 filtert Jobausschreibungen, die in den letzten 24 Stunden veröffentlicht wurden.",
     )
     distance: Optional[Union[int, str]] = Field(
         default=25,
-        description="Maximum distance from location in miles. If not specified or 0, the default value of 25 miles is applied.",
+        description="Maximale Entfernung vom Standort in Meilen. Wenn nicht angegeben oder 0, wird der Standardwert von 25 Meilen angewendet.",
     )

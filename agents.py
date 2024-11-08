@@ -171,9 +171,9 @@ def chatbot_node(state):
 
 def define_graph():
     """
-    Defines and returns a graph representing the workflow of job search agent.
-    Returns:
-        graph (StateGraph): The compiled graph representing the workflow.
+    Definiert und gibt einen Graphen zurück, der den Arbeitsablauf des Jobsucheagenten darstellt.
+    Rückgabe:
+        graph (StateGraph): Der kompilierte Graph, der den Arbeitsablauf repräsentiert.
     """
     workflow = StateGraph(AgentState)
     workflow.add_node("ResumeAnalyzer", resume_analyzer_node)

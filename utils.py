@@ -8,17 +8,17 @@ load_dotenv()
 
 class SerperClient:
     """
-    A client for performing Google searches using the Serper API.
+    Ein Client für die Durchführung von Google-Suchen mit der Serper-API.
 
-    This client provides synchronous and asynchronous methods for performing Google searches
-    and retrieving the search results.
+    Dieser Client bietet synchrone und asynchrone Methoden zur Durchführung von Google-Suchen
+    und zum Abrufen der Suchergebnisse.
 
-    Attributes:
-        None
+    Attribute:
+        Keine
 
-    Methods:
-        search(query, num_results): Perform a Google search for the given query and return the search results.
-        search_async(query, num_results): Asynchronously perform a Google search for the given query and return the search results.
+    Methoden:
+        search(query, num_results): Führt eine Google-Suche für die angegebene Abfrage durch und gibt die Suchergebnisse zurück.
+        search_async(query, num_results): Führt asynchron eine Google-Suche für die angegebene Abfrage durch und gibt die Suchergebnisse zurück.
     """
 
     def __init__(self, serper_api_key: str = os.environ.get("SERPER_API_KEY")) -> None:
@@ -30,18 +30,18 @@ class SerperClient:
         num_results: int = 5,
     ):
         """
-        Perform a Google search for the given query and return the search results.
+        Führt eine Google-Suche für die angegebene Abfrage durch und gibt die Suchergebnisse zurück.
 
         Args:
-            query (str): The search query.
-            num_results (int, optional): The number of search results to retrieve. Defaults to GOOGLE_SEARCH_DEFAULT_RESULT_COUNT.
+            query (str): Die Suchanfrage.
+            num_results (int, optional): Die Anzahl der abzurufenden Suchergebnisse. Standardmäßig GOOGLE_SEARCH_DEFAULT_RESULT_COUNT.
 
         Returns:
-            dict: The search results as a dictionary.
+            dict: Die Suchergebnisse als Wörterbuch.
 
         """
         response = GoogleSerperAPIWrapper(k=num_results).results(query=query)
-        # this is to make the response compatible with the response from the google search client
+        # Dies dient dazu, die Antwort mit der Antwort des Google-Suchclients kompatibel zu machen
         items = response.pop("organic", [])
         response["items"] = items
         return response
@@ -63,5 +63,5 @@ class FireCrawlClient:
         for doc in docs:
             page_content += doc.page_content
 
-        # limit to 10,000 characters
+        # Begrenzung auf 10.000 Zeichen
         return page_content[:10000]
